@@ -1,14 +1,15 @@
-import { useId } from "react"
+
 import Todo from "./todo"
 
-export default function TodoList({ todoList }) {
+function TodoList({ todoList, onTodoClick }) {
     return (
         <>
             {
-                todoList.map((val,key) => (
-                    <Todo key={key} todo={val} />
+                todoList.map((todo) => (
+                    <Todo onTodoClick={onTodoClick} key={todo.id} todo={todo} />
                 ))
             }
         </>
     )
 }
+export default TodoList

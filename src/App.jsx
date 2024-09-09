@@ -1,16 +1,31 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import './App.css'
 import TodoList from './components/todolist'
 function App() {
   const [titleName, setTitleName] = useState("")
   const [todolist, setTodoList] = useState([])
-  const changeTextInput = (e) => {
+  const [id, setId] = useState(0)
+  const changeTextInput = useCallback((e) => {
     setTitleName(e.target.value)
-  }
-  const AddToDoList = () => {
-    setTodoList([...todolist, titleName])
+  }, []);
+
+  const AddToDoList = useCallback((e) => {
+    setId(id + 1)
+    const isComplete = false
+    setTodoList([...todolist, { id: id, title: titleName, state: isComplete }])
     setTitleName("")
-  }
+  }, [titleName, todolist, id]);
+
+  const handleClick = useCallback((idx) => {
+    const newTodoList = [...todolist]
+    newTodoList[idx] = {
+      ...newTodoList[idx],
+      state: !newTodoList[idx].state
+    }
+    setTodoList(newTodoList)
+
+  }, [todolist]);
+
   return (
     <div className="container">
       <div className="formTodo">
@@ -18,7 +33,7 @@ function App() {
         <button onClick={AddToDoList}>Thêm</button>
       </div>
       <ul className='list-todo'>
-        <TodoList todoList={todolist}></TodoList>
+        <TodoList onTodoClick={handleClick} todoList={todolist}></TodoList>
       </ul>
     </div>
   )
